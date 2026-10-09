@@ -25,7 +25,63 @@
     />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Splash de carga: React lo reemplaza al montar -->
+      <div
+        style="
+          position: fixed;
+          inset: 0;
+          display: grid;
+          place-items: center;
+          background: linear-gradient(165deg, #fff8ef 0%, #ffedf3 52%, #eaf6ff 100%);
+          font-family: 'Baloo 2', system-ui, sans-serif;
+        "
+      >
+        <div style="text-align: center">
+          <svg viewBox="0 0 220 240" width="110" style="display: block; margin: 0 auto">
+            <circle cx="62" cy="52" r="30" fill="#E9E2EE" stroke="#D5CAE0" stroke-width="3" />
+            <circle cx="62" cy="52" r="18" fill="#FFC9DA" />
+            <circle cx="158" cy="52" r="30" fill="#E9E2EE" stroke="#D5CAE0" stroke-width="3" />
+            <circle cx="158" cy="52" r="18" fill="#FFC9DA" />
+            <circle cx="84" cy="26" r="17" fill="#FFFFFF" />
+            <circle cx="110" cy="18" r="19" fill="#FFFFFF" />
+            <circle cx="136" cy="26" r="17" fill="#FFFFFF" />
+            <rect x="72" y="30" width="76" height="18" rx="9" fill="#FFFFFF" stroke="#EEE4F0" stroke-width="2" />
+            <circle cx="110" cy="102" r="58" fill="#E9E2EE" stroke="#D5CAE0" stroke-width="3" />
+            <g fill="none" stroke="#4A3D52" stroke-width="4" stroke-linecap="round">
+              <path d="M80,100 Q88,91 96,100" />
+              <path d="M124,100 Q132,91 140,100" />
+            </g>
+            <ellipse cx="72" cy="116" rx="9" ry="5" fill="#FFACC6" opacity="0.85" />
+            <ellipse cx="148" cy="116" rx="9" ry="5" fill="#FFACC6" opacity="0.85" />
+            <path d="M110,106 C106,106 104.5,109 107,112 C108.5,113.6 111.5,113.6 113,112 C115.5,109 114,106 110,106 Z" fill="#FF8FB5" />
+            <path d="M101,117 Q110,124 119,117" fill="none" stroke="#4A3D52" stroke-width="3" stroke-linecap="round" />
+          </svg>
+          <p
+            style="
+              margin: 10px 0 0;
+              color: #7a5c85;
+              font-weight: 800;
+              letter-spacing: 0.06em;
+              animation: ratonpulse 1.4s ease-in-out infinite;
+            "
+          >
+            Horneando la pastelería…
+          </p>
+        </div>
+      </div>
+      <style>
+        @keyframes ratonpulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.55; transform: scale(1.04); }
+        }
+      </style>
+      <noscript>
+        <p style="text-align: center; font-family: sans-serif; margin-top: 40vh">
+          Ratón necesita JavaScript para hornear. Actívalo y recarga.
+        </p>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
