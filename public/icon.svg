@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFE3EE"/>
+      <stop offset="0.55" stop-color="#FFF3DA"/>
+      <stop offset="1" stop-color="#E3F2FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo redondeado -->
+  <rect x="14" y="14" width="484" height="484" rx="122" fill="url(#bg)"/>
+
+  <!-- Chispas decorativas -->
+  <g opacity="0.7">
+    <rect x="60" y="120" width="14" height="44" rx="7" fill="#FFB7CC" transform="rotate(-30 67 142)"/>
+    <rect x="418" y="110" width="14" height="40" rx="7" fill="#A8DCF0" transform="rotate(28 425 130)"/>
+    <rect x="70" y="360" width="14" height="42" rx="7" fill="#FFD98A" transform="rotate(24 77 381)"/>
+    <rect x="424" y="366" width="14" height="40" rx="7" fill="#C9A7F5" transform="rotate(-26 431 386)"/>
+    <circle cx="96" cy="240" r="11" fill="#9BE39B"/>
+    <circle cx="420" cy="238" r="11" fill="#FF8FAB"/>
+  </g>
+
+  <!-- Orejas -->
+  <circle cx="170" cy="196" r="76" fill="#E9E2EE" stroke="#D5CAE0" stroke-width="9"/>
+  <circle cx="170" cy="196" r="45" fill="#FFC9DA"/>
+  <circle cx="342" cy="196" r="76" fill="#E9E2EE" stroke="#D5CAE0" stroke-width="9"/>
+  <circle cx="342" cy="196" r="45" fill="#FFC9DA"/>
+
+  <!-- Gorro de chef -->
+  <circle cx="206" cy="128" r="40" fill="#FFFFFF"/>
+  <circle cx="256" cy="106" r="47" fill="#FFFFFF"/>
+  <circle cx="306" cy="128" r="40" fill="#FFFFFF"/>
+  <rect x="172" y="122" width="168" height="42" rx="21" fill="#FFFFFF" stroke="#EEE4F0" stroke-width="5"/>
+  <path d="M256 148c-9-7-6.5-16 0-13.5 6.5-2.5 9 6.5 0 13.5z" fill="#FF8FB5"/>
+
+  <!-- Cabeza -->
+  <circle cx="256" cy="274" r="122" fill="#E9E2EE" stroke="#D5CAE0" stroke-width="9"/>
+
+  <!-- Bigotes -->
+  <g stroke="#C7BCD4" stroke-width="7" stroke-linecap="round">
+    <line x1="106" y1="272" x2="150" y2="281"/>
+    <line x1="108" y1="304" x2="150" y2="295"/>
+    <line x1="406" y1="272" x2="362" y2="281"/>
+    <line x1="404" y1="304" x2="362" y2="295"/>
+  </g>
+
+  <!-- Rubor -->
+  <ellipse cx="180" cy="312" rx="22" ry="12" fill="#FFACC6" opacity="0.85"/>
+  <ellipse cx="332" cy="312" rx="22" ry="12" fill="#FFACC6" opacity="0.85"/>
+
+  <!-- Ojos felices -->
+  <g fill="none" stroke="#4A3D52" stroke-width="11" stroke-linecap="round">
+    <path d="M196 278q18-18 36 0"/>
+    <path d="M280 278q18-18 36 0"/>
+  </g>
+
+  <!-- Nariz y sonrisa -->
+  <path d="M256 298c-9-1.5-13 5.5-7.5 11.5 3.5 3.8 11.5 3.8 15 0 5.5-6 1.5-13-7.5-11.5z" fill="#FF8FB5"/>
+  <path d="M234 322q22 20 44 0" fill="none" stroke="#4A3D52" stroke-width="9" stroke-linecap="round"/>
+</svg>
