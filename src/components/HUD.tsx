@@ -1,19 +1,16 @@
 // ─────────────────────────────────────────────────────────────
-//  Ratón · Barra superior: cronómetro, puntos, pasteles, récord
+//  Ratón · HUD flotante y minimalista
+//  Prioriza el área jugable: la barra de tiempo se pega al borde
+//  superior y los contadores viven en pastillas pequeñas que
+//  flotan sobre la escena (sin robar altura a la mesa).
 // ─────────────────────────────────────────────────────────────
 
 import { motion } from "framer-motion";
-import {
-  CakeSlice,
-  Sparkles,
-  Star,
-  Timer,
-  Trophy,
-  Volume2,
-  VolumeX,
-} from "lucide-react";
+import { CakeSlice, Sparkles, Star, Volume2, VolumeX } from "lucide-react";
 import { GAME_SECONDS } from "../game/types";
-import { Mouse } from "./Mouse";
+
+/** Alto que ocupa el HUD sobre la escena (para el padding del juego). */
+export const HUD_HEIGHT = 34;
 
 function Pill({
   children,
@@ -24,7 +21,7 @@ function Pill({
 }) {
   return (
     <div
-      className={`flex items-center gap-1.5 rounded-full border border-white/80 bg-white/75 px-3 py-1 shadow-[0_6px_16px_-8px_rgba(190,120,150,0.55)] backdrop-blur-sm ${className}`}
+      className={`flex items-center gap-1 rounded-full border border-white/80 bg-white/80 px-2 py-0.5 shadow-[0_5px_14px_-8px_rgba(190,120,150,0.6)] backdrop-blur-sm ${className}`}
     >
       {children}
     </div>
@@ -35,7 +32,6 @@ export function HUD({
   leftMs,
   score,
   cakes,
-  best,
   combo,
   muted,
   onToggleMute,
@@ -43,7 +39,6 @@ export function HUD({
   leftMs: number;
   score: number;
   cakes: number;
-  best: number;
   combo: number;
   muted: boolean;
   onToggleMute: () => void;
@@ -53,98 +48,90 @@ export function HUD({
   const urgent = seconds <= 10;
 
   return (
-    <header className="relative z-20 flex items-center gap-2 px-3 pt-2">
-      {/* Logo mini */}
-      <Pill className="shrink-0 gap-2 py-0.5 pr-3">
-        <span className="grid h-9 w-9 place-items-center">
-          <Mouse mood="idle" body={false} className="h-9 w-9" />
-        </span>
-        <span className="font-kawaii hidden leading-none sm:block">
-          <span className="block text-sm font-extrabold tracking-wide text-[#7A5C85]">
-            RATÓN
-          </span>
-          <span className="block text-[9px] font-bold tracking-[0.2em] text-[#C08FB0]">
-            ケーキやさん
-          </span>
-        </span>
-      </Pill>
+    <div className="pointer-events-none absolute inset-x-0 top-0 z-30">
+      {/* Barra de tiempo pegada al borde: cero espacio desperdiciado */}
+      <div className="h-[5px] w-full bg-white/55">
+        <div
+          className="h-full rounded-r-full transition-[width] duration-150 ease-linear"
+          style={{
+            width: `${pct * 100}%`,
+            background: urgent
+              ? "linear-gradient(90deg,#FF9FB5,#FF5A7A)"
+              : "linear-gradient(90deg,#9BE3C4,#7FD8F7)",
+          }}
+        />
+      </div>
 
-      {/* Cronómetro central */}
-      <div className="mx-auto flex min-w-0 flex-col items-center">
-        <Pill className={`gap-2 ${urgent ? "animate-pulse-soft" : ""}`}>
-          <Timer
-            size={18}
-            className={urgent ? "text-[#FF5A7A]" : "text-[#8FB8FF]"}
-            strokeWidth={2.6}
-          />
-          <span
-            className={`font-kawaii text-xl font-extrabold tabular-nums leading-none ${
-              urgent ? "text-[#FF5A7A]" : "text-[#7A5C85]"
+      <div className="relative flex items-start justify-between px-2 pt-1">
+        {/* Izquierda: puntos, pasteles y combo */}
+        <div className="flex items-center gap-1">
+          <Pill>
+            <Star size={13} className="text-[#FFC24B]" strokeWidth={2.8} fill="#FFE9B8" />
+            <motion.span
+              key={score}
+              initial={{ scale: 1.3 }}
+              animate={{ scale: 1 }}
+              className="font-kawaii min-w-[2ch] text-sm font-extrabold tabular-nums leading-none text-[#7A5C85]"
+            >
+              {score}
+            </motion.span>
+          </Pill>
+          <Pill>
+            <CakeSlice size={13} className="text-[#FF8FAB]" strokeWidth={2.8} />
+            <span className="font-kawaii text-sm font-extrabold tabular-nums leading-none text-[#7A5C85]">
+              {cakes}
+            </span>
+          </Pill>
+          {combo >= 2 && (
+            <motion.span
+              key={combo}
+              initial={{ scale: 0.4, rotate: -10 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 500, damping: 14 }}
+            >
+              <Pill className="border-[#FFD98A] bg-[#FFF3DA]">
+                <Sparkles size={12} className="text-[#E8930C]" strokeWidth={2.8} />
+                <span className="font-kawaii text-sm font-extrabold leading-none text-[#E8930C]">
+                  ×{combo}
+                </span>
+              </Pill>
+            </motion.span>
+          )}
+        </div>
+
+        {/* Centro: cronómetro */}
+        <motion.div
+          animate={urgent ? { scale: [1, 1.12, 1] } : { scale: 1 }}
+          transition={urgent ? { repeat: Infinity, duration: 1 } : undefined}
+          className="absolute left-1/2 top-1 -translate-x-1/2"
+        >
+          <div
+            className={`flex items-baseline gap-0.5 rounded-full border px-2.5 py-0.5 shadow-[0_5px_14px_-8px_rgba(190,120,150,0.6)] backdrop-blur-sm ${
+              urgent
+                ? "border-[#FFB7CC] bg-[#FFE5EF]/90"
+                : "border-white/80 bg-white/80"
             }`}
           >
-            {seconds}
-            <span className="ml-0.5 text-[10px] font-bold text-[#B48BAE]">s</span>
-          </span>
-        </Pill>
-        <div className="mt-1 h-1.5 w-36 overflow-hidden rounded-full bg-white/70 sm:w-48">
-          <div
-            className="h-full rounded-full transition-[width] duration-150 ease-linear"
-            style={{
-              width: `${pct * 100}%`,
-              background: urgent
-                ? "linear-gradient(90deg,#FF9FB5,#FF5A7A)"
-                : "linear-gradient(90deg,#9BE3C4,#7FD8F7)",
-            }}
-          />
-        </div>
-      </div>
+            <span
+              className={`font-kawaii text-base font-extrabold tabular-nums leading-none ${
+                urgent ? "text-[#FF5A7A]" : "text-[#7A5C85]"
+              }`}
+            >
+              {seconds}
+            </span>
+            <span className="font-kawaii text-[9px] font-bold text-[#B48BAE]">s</span>
+          </div>
+        </motion.div>
 
-      {/* Marcadores */}
-      <div className="flex shrink-0 items-center gap-1.5">
-        {combo >= 2 && (
-          <motion.span
-            key={combo}
-            initial={{ scale: 0.4, rotate: -10 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 14 }}
-          >
-            <Pill className="border-[#FFD98A] bg-[#FFF3DA] text-[#E8930C]">
-              <Sparkles size={15} strokeWidth={2.6} />
-              <span className="font-kawaii text-sm font-extrabold">×{combo}</span>
-            </Pill>
-          </motion.span>
-        )}
-        <Pill>
-          <Star size={16} className="text-[#FFC24B]" strokeWidth={2.6} fill="#FFE9B8" />
-          <motion.span
-            key={score}
-            initial={{ scale: 1.35 }}
-            animate={{ scale: 1 }}
-            className="font-kawaii min-w-[2ch] text-lg font-extrabold tabular-nums text-[#7A5C85]"
-          >
-            {score}
-          </motion.span>
-        </Pill>
-        <Pill>
-          <CakeSlice size={16} className="text-[#FF8FAB]" strokeWidth={2.6} />
-          <span className="font-kawaii text-lg font-extrabold tabular-nums text-[#7A5C85]">
-            {cakes}
-          </span>
-        </Pill>
-        <Pill className="hidden md:flex">
-          <Trophy size={15} className="text-[#E8A33D]" strokeWidth={2.6} />
-          <span className="font-kawaii text-sm font-extrabold tabular-nums text-[#B4895A]">
-            {best}
-          </span>
-        </Pill>
+        {/* Derecha: silencio */}
         <button
           onClick={onToggleMute}
-          className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-white/80 bg-white/75 text-[#B48BAE] shadow-[0_6px_16px_-8px_rgba(190,120,150,0.55)] backdrop-blur-sm transition-transform active:scale-90"
+          className="pointer-events-auto grid h-7 w-7 shrink-0 place-items-center rounded-full border border-white/80 bg-white/80 text-[#B48BAE] shadow-[0_5px_14px_-8px_rgba(190,120,150,0.6)] backdrop-blur-sm transition-transform active:scale-90"
           aria-label={muted ? "Activar sonido" : "Silenciar"}
         >
-          {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+          {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
         </button>
       </div>
-    </header>
+    </div>
   );
 }

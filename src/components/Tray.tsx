@@ -49,11 +49,13 @@ export function Tray({
   onTab,
   dragging,
   onChipDown,
+  compact = false,
 }: {
   tab: Category;
   onTab: (t: Category) => void;
   dragging: { cat: Category; id: string } | null;
   onChipDown: (e: React.PointerEvent, cat: Category, id: string) => void;
+  compact?: boolean;
 }) {
   const items = itemsFor(tab);
 
@@ -84,20 +86,24 @@ export function Tray({
       </div>
 
       {/* Fichas arrastrables */}
-      <div className="no-scrollbar mt-1.5 grid min-h-0 flex-1 auto-rows-min grid-cols-3 content-start gap-1.5 overflow-y-auto">
+      <div
+        className={`no-scrollbar mt-1.5 grid min-h-0 flex-1 auto-rows-fr gap-1.5 overflow-y-auto ${
+          compact ? "grid-cols-6" : "grid-cols-3"
+        }`}
+      >
         {items.map((id) => {
           const isDragging = dragging?.cat === tab && dragging.id === id;
           return (
             <div
               key={id}
               onPointerDown={(e) => onChipDown(e, tab, id)}
-              className={`flex cursor-grab touch-none select-none flex-col items-center gap-0.5 rounded-2xl border-2 bg-white/90 px-0.5 py-1.5 shadow-[0_5px_12px_-6px_rgba(190,120,150,0.5)] transition-all duration-150 active:cursor-grabbing ${
+              className={`flex cursor-grab touch-none select-none flex-col items-center justify-center gap-0.5 rounded-2xl border-2 bg-white/90 px-0.5 shadow-[0_5px_12px_-6px_rgba(190,120,150,0.5)] transition-all duration-150 active:cursor-grabbing ${compact ? "py-1" : "py-1.5"} ${
                 isDragging
                   ? "scale-95 border-[#FF8FAB] opacity-40"
                   : "border-white hover:-translate-y-0.5 hover:border-[#FFD3E0] hover:shadow-[0_9px_16px_-8px_rgba(190,120,150,0.65)]"
               }`}
             >
-              <IngredientIcon cat={tab} id={id} size={34} />
+              <IngredientIcon cat={tab} id={id} size={compact ? 30 : 34} />
               <span className="font-kawaii text-[9.5px] font-bold text-[#9A7BA2]">
                 {labelFor(tab, id)}
               </span>
@@ -106,9 +112,11 @@ export function Tray({
         })}
       </div>
 
-      <p className="font-kawaii mt-1 text-center text-[9.5px] font-bold text-[#C6A3C0]">
-        {CATEGORY_META[tab].hint}
-      </p>
+      {!compact && (
+        <p className="font-kawaii mt-1 text-center text-[9.5px] font-bold text-[#C6A3C0]">
+          {CATEGORY_META[tab].hint}
+        </p>
+      )}
     </div>
   );
 }

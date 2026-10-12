@@ -9,7 +9,6 @@ import { Volume2, VolumeX } from "lucide-react";
 import { Background } from "./components/Background";
 import { GameScreen, type GameResult } from "./screens/GameScreen";
 import { GameOverScreen } from "./screens/GameOverScreen";
-import { RotateOverlay } from "./screens/RotateOverlay";
 import { StartScreen } from "./screens/StartScreen";
 import { sound } from "./game/sound";
 import { loadBest, loadMuted, saveMuted } from "./game/storage";
@@ -122,8 +121,6 @@ export default function App() {
           {muted ? <VolumeX size={17} /> : <Volume2 size={17} />}
         </button>
       )}
-
-      <RotateOverlay />
     </div>
   );
 }

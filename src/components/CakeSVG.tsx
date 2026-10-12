@@ -92,10 +92,14 @@ function DollopRow({
 export function CakeSVG({
   spec,
   animated = false,
+  fit = false,
   className,
 }: {
   spec: CakeSpec;
   animated?: boolean;
+  /** Recorta el encuadre al pastel (sin pedestal ni mesa): ideal para el
+   *  ticket del pedido, donde interesa ver la receta con nitidez. */
+  fit?: boolean;
   className?: string;
 }) {
   const { layers, cream, glaze, toppings } = spec;
@@ -103,6 +107,15 @@ export function CakeSVG({
   const topY = PLATE_TOP - n * LAYER_H;
   const topW = n > 0 ? WIDTHS[n - 1] : 0;
   const slotScale = Math.max(0.72, topW / 178);
+
+  // Encuadre: completo (escena) o ajustado al pastel (referencia nítida).
+  const FIT_W = 196;
+  const FIT_BOTTOM = 214; // justo bajo el plato, sin pedestal
+  const fitTop = topY - 26; // deja aire para glaseado y toppings
+  const viewBox =
+    fit && n > 0
+      ? `${CX - FIT_W / 2} ${fitTop} ${FIT_W} ${FIT_BOTTOM - fitTop}`
+      : "0 0 340 272";
 
   // Capa i (de abajo hacia arriba)
   const layerNode = (i: number) => {
@@ -182,13 +195,28 @@ export function CakeSVG({
   };
 
   return (
-    <svg viewBox="0 0 340 272" className={className} style={{ display: "block" }}>
-      {/* Sombra de mesa + pedestal */}
-      <ellipse cx={CX} cy={250} rx={118} ry={12} fill="#C97B96" opacity={0.14} />
-      <ellipse cx={CX} cy={233} rx={42} ry={9} fill="#A8DCCB" stroke="#8FCEBA" strokeWidth="2" />
-      <rect x={CX - 11} y={202} width={22} height={32} rx={10} fill="#BFE7D8" stroke="#8FCEBA" strokeWidth="2" />
-      <ellipse cx={CX} cy={201} rx={117} ry={15} fill="#D4F2E6" stroke="#8FCEBA" strokeWidth="2.5" />
-      <ellipse cx={CX} cy={198.5} rx={96} ry={10.5} fill="#EBFBF4" />
+    <svg viewBox={viewBox} className={className} style={{ display: "block" }}>
+      {/* Sombra de mesa + pedestal (se omiten en encuadre ajustado) */}
+      {!fit && (
+        <g>
+          <ellipse cx={CX} cy={250} rx={118} ry={12} fill="#C97B96" opacity={0.14} />
+          <ellipse cx={CX} cy={233} rx={42} ry={9} fill="#A8DCCB" stroke="#8FCEBA" strokeWidth="2" />
+          <rect x={CX - 11} y={202} width={22} height={32} rx={10} fill="#BFE7D8" stroke="#8FCEBA" strokeWidth="2" />
+        </g>
+      )}
+      {/* Plato: completo en escena, estrecho en encuadre ajustado para que
+          nunca se recorte contra los bordes del marco. */}
+      {fit ? (
+        <g>
+          <ellipse cx={CX} cy={199} rx={93} ry={12} fill="#D4F2E6" stroke="#8FCEBA" strokeWidth="2.5" />
+          <ellipse cx={CX} cy={197} rx={76} ry={8} fill="#EBFBF4" />
+        </g>
+      ) : (
+        <g>
+          <ellipse cx={CX} cy={201} rx={117} ry={15} fill="#D4F2E6" stroke="#8FCEBA" strokeWidth="2.5" />
+          <ellipse cx={CX} cy={198.5} rx={96} ry={10.5} fill="#EBFBF4" />
+        </g>
+      )}
 
       {/* Capas */}
       {layers.map((_, i) => layerNode(i))}

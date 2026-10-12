@@ -8,10 +8,11 @@ import { ConciergeBell, Hand, Trash2, Undo2 } from "lucide-react";
 import { CakeSVG } from "../components/CakeSVG";
 import { Burst } from "../components/Confetti";
 import { IngredientIcon } from "../components/glyphs";
-import { HUD } from "../components/HUD";
+import { HUD, HUD_HEIGHT } from "../components/HUD";
 import { Mouse, type MouseMood } from "../components/Mouse";
-import { OrderTicket } from "../components/OrderTicket";
+import { OrderTicket, OrderTicketCompact } from "../components/OrderTicket";
 import { Tray } from "../components/Tray";
+import { useIsPortrait } from "../hooks/useIsPortrait";
 import { generateOrder, matchesOrder, priceFor } from "../game/logic";
 import { sound } from "../game/sound";
 import { bumpPlays, saveBest } from "../game/storage";
@@ -94,6 +95,7 @@ export function GameScreen({
   const [mood, setMood] = useState<MouseMood>("idle");
   const [tab, setTab] = useState<Category>("flavors");
   const [hint, setHint] = useState(true);
+  const portrait = useIsPortrait();
 
   const scoreRef = useRef(0);
   const cakesRef = useRef(0);
@@ -303,9 +305,8 @@ export function GameScreen({
 
   // ── Render ─────────────────────────────────────────────────
   return (
-    <div className="relative z-10 flex h-full min-h-0 flex-col overflow-hidden">
+    <div className="relative z-10 mx-auto flex h-full min-h-0 w-full max-w-[1600px] flex-col overflow-hidden">
       <HUD
-        best={best}
         cakes={cakes}
         combo={combo}
         leftMs={leftMs}
@@ -314,20 +315,35 @@ export function GameScreen({
         score={score}
       />
 
-      <div className="flex min-h-0 flex-1 gap-2 px-3 pb-2.5 pt-2">
-        {/* Pedido */}
-        <div className="w-[25%] min-w-[164px] max-w-[235px]">
-          <OrderTicket order={order} />
+      <div
+        className={`flex min-h-0 flex-1 gap-2 px-2 pb-2 ${
+          portrait ? "flex-col" : ""
+        }`}
+        style={{ paddingTop: HUD_HEIGHT }}
+      >
+        {/* Pedido (referencia: compacto, el protagonista es el stand) */}
+        <div
+          className={
+            portrait ? "w-full shrink-0" : "w-[22%] min-w-[148px] max-w-[208px]"
+          }
+        >
+          {portrait ? (
+            <OrderTicketCompact order={order} />
+          ) : (
+            <OrderTicket order={order} />
+          )}
         </div>
 
         {/* Zona de trabajo */}
-        <section className="relative min-w-0 flex-1">
+        <section className={`relative min-w-0 flex-1 ${portrait ? "min-h-0" : ""}`}>
           <motion.div
             ref={standRef}
             animate={shake}
-            className="absolute inset-x-0 bottom-[58px] top-0 flex items-end justify-center"
+            className={`absolute inset-x-0 top-0 flex items-end justify-center ${
+              portrait ? "bottom-[50px]" : "bottom-[52px]"
+            }`}
           >
-            <div className="animate-breathe relative aspect-[340/272] h-full max-h-[330px]">
+            <div className="animate-breathe relative aspect-[340/272] h-full max-h-full w-auto max-w-full">
               <CakeSVG spec={build} animated className="h-full w-full" />
             </div>
 
@@ -335,7 +351,7 @@ export function GameScreen({
             {fly && (
               <motion.div
                 key={fly.id}
-                className="pointer-events-none absolute bottom-0 left-1/2 aspect-[340/272] h-full max-h-[330px]"
+                className="pointer-events-none absolute bottom-0 left-1/2 aspect-[340/272] h-full max-h-full"
                 style={{ x: "-50%" }}
                 initial={{ y: 0, opacity: 1, rotate: 0 }}
                 animate={{ y: -300, opacity: 0, rotate: 9 }}
@@ -381,7 +397,9 @@ export function GameScreen({
 
           {/* Ratita reaccionando */}
           <motion.div
-            className="pointer-events-none absolute -bottom-1 left-1 z-10 w-[74px]"
+            className={`pointer-events-none absolute -bottom-1 left-1 z-10 ${
+              portrait ? "w-[58px]" : "w-[74px]"
+            }`}
             animate={
               mood === "happy"
                 ? { y: [0, -16, 0], rotate: [0, -5, 0] }
@@ -418,7 +436,11 @@ export function GameScreen({
           ))}
 
           {/* Controles */}
-          <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center justify-center gap-2">
+          <div
+            className={`absolute inset-x-0 bottom-0 flex items-center justify-center gap-2 ${
+              portrait ? "h-[50px]" : "h-[52px]"
+            }`}
+          >
             <button
               onClick={undo}
               disabled={history.length === 0}
@@ -454,8 +476,15 @@ export function GameScreen({
         </section>
 
         {/* Bandeja */}
-        <div className="w-[28%] min-w-[208px] max-w-[292px]">
+        <div
+          className={
+            portrait
+              ? "h-[30%] max-h-[210px] min-h-[136px] w-full shrink-0"
+              : "w-[30%] min-w-[210px] max-w-[300px]"
+          }
+        >
           <Tray
+            compact={portrait}
             tab={tab}
             onTab={(t) => {
               setTab(t);

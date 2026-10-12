@@ -40,7 +40,9 @@ segunditos** de horno. ¿Cuántos pasteles saldrán de tus manos en 90 segundos?
 | 4 | Decora con los **toppings** exactos (ojito con los ×2). |
 | 5 | Pulsa **SERVIR** y cruza los bigotes. |
 
-- Pensado para **móvil en horizontal** (también funciona con ratón).
+- **Responsive total**: móvil en vertical, tablet y escritorio. La mesa se
+  reorganiza sola (en vertical: ticket arriba, stand al centro, bandeja
+  abajo), así que se juega en cualquier dispositivo sin girar nada.
 - ¿Te equivocaste? **Deshacer** y **limpiar** siempre están a un toque.
 - Servir mal rompe el combo… pero el pastel se queda para que lo arregles.
 - El **récord histórico** se guarda en tu dispositivo: supérate en cada visita.
@@ -59,7 +61,11 @@ segunditos** de horno. ¿Cuántos pasteles saldrán de tus manos en 90 segundos?
   con botón de silencio persistente.
 - Persistencia del récord y ajustes con `localStorage`
   (módulo `src/game/storage.ts`, listo para migrar a IndexedDB).
-- Aviso amable de orientación si juegas en vertical.
+- Layout adaptativo con el hook `useIsPortrait`: girar el dispositivo en
+  mitad de la partida reorganiza la mesa sin perder el pastel.
+- **Interfaz que no estorba**: el HUD flota sobre la escena (barra de tiempo
+  pegada al borde y contadores en pastillas mínimas), de modo que el pastel
+  y la bandeja se quedan con casi toda la pantalla.
 
 ## Stack técnico
 
@@ -92,7 +98,8 @@ Raton-Cake/
    │  ├─ sound.ts        # Mini sintetizador WebAudio
    │  └─ storage.ts      # Récord y ajustes persistentes
    ├─ components/        # CakeSVG, mascota, HUD, ticket, bandeja…
-   └─ screens/           # Inicio, partida, fin y aviso de rotación
+   ├─ hooks/             # useIsPortrait (layout responsive)
+   └─ screens/           # Inicio, partida y fin
 ```
 
 ## Desarrollo local
@@ -104,8 +111,9 @@ npm run build   # compila a dist/ (usa base /Raton-Cake/)
 npm run preview # previsualiza la build de producción
 ```
 
-> Consejo: en las DevTools del navegador activa el modo dispositivo y gira a
-> horizontal para probar la experiencia móvil.
+> Consejo: en las DevTools del navegador activa el modo dispositivo y prueba
+> el juego en vertical, horizontal, tablet y escritorio — la mesa se adapta
+> en directo.
 
 ## Despliegue en GitHub Pages
 

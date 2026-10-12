@@ -49,7 +49,7 @@ export function GameOverScreen({
   onMenu: () => void;
 }) {
   return (
-    <div className="absolute inset-0 z-30 grid place-items-center bg-[#7A5C85]/25 p-4 backdrop-blur-[3px]">
+    <div className="absolute inset-0 z-30 grid place-items-center overflow-y-auto bg-[#7A5C85]/25 p-4 backdrop-blur-[3px]">
       {result.record && (
         <>
           <Burst seed={11} count={18} spread={220} />

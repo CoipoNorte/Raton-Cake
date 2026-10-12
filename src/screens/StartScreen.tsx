@@ -16,7 +16,7 @@ export function StartScreen({
   onPlay: () => void;
 }) {
   return (
-    <div className="relative z-10 flex h-full items-center justify-center gap-4 px-4 sm:gap-10 sm:px-10">
+    <div className="relative z-10 flex h-full items-center justify-center gap-4 px-4 portrait:flex-col portrait:gap-2 portrait:px-6 sm:gap-10 sm:px-10">
       {/* Mascota flotante */}
       <motion.div
         initial={{ x: -50, opacity: 0 }}
@@ -26,7 +26,7 @@ export function StartScreen({
         <motion.div
           animate={{ y: [0, -12, 0], rotate: [0, -1.5, 0] }}
           transition={{ repeat: Infinity, duration: 3.4, ease: "easeInOut" }}
-          className="w-[clamp(140px,46vh,250px)]"
+          className="w-[clamp(140px,46vh,250px)] portrait:w-[clamp(104px,25vh,168px)]"
         >
           <Mouse
             mood="happy"
@@ -47,7 +47,7 @@ export function StartScreen({
         </motion.span>
 
         <h1
-          className="font-kawaii -my-1 flex text-[clamp(46px,13vh,84px)] font-extrabold tracking-[0.06em] text-[#7A5C85]"
+          className="font-kawaii -my-1 flex text-[clamp(46px,13vh,84px)] font-extrabold tracking-[0.06em] text-[#7A5C85] portrait:text-[clamp(38px,12vw,66px)]"
           style={{ textShadow: "0 3px 0 #FFFFFF, 0 10px 22px rgba(232,101,143,0.35)" }}
           aria-label="Ratón"
         >
@@ -99,7 +99,7 @@ export function StartScreen({
           initial={{ y: 18, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.75 }}
-          className="mt-4 grid grid-cols-3 gap-2"
+          className="mt-4 grid grid-cols-3 gap-2 portrait:mt-3 portrait:gap-1.5"
         >
           {[
             { icon: Hand, text: "Arrastra ingredientes al stand" },
